@@ -1,0 +1,37 @@
+{
+	"name": "pipeline_crear_Tablas",
+	"properties": {
+		"activities": [
+			{
+				"name": "crear Tablas",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "create table usuarios(\n    id int primary key,\n    Nombre varchar(50),\n    Edad int,\n    Email varchar(50),\n    ciudad varchar(50)\n)"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"folder": {
+			"name": "Pipeline Nivel 0"
+		},
+		"annotations": []
+	}
+}

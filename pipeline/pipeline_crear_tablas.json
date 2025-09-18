@@ -1,0 +1,37 @@
+{
+	"name": "pipeline_crear_tablas",
+	"properties": {
+		"activities": [
+			{
+				"name": "Script1",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "CREATE TABLE datos_sucios(\n    ID int primary key,\n    Nombre varchar(50),\n    Email varchar(50),\n    Edad int,\n    Ciudad varchar(50)\n)"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"folder": {
+			"name": "Pipeline Nivel 0"
+		},
+		"annotations": []
+	}
+}

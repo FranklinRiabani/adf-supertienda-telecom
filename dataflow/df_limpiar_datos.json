@@ -1,0 +1,54 @@
+{
+	"name": "df_limpiar_datos",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "datos_sucios_csv",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "reemplazarValores"
+				},
+				{
+					"name": "datosNulos"
+				},
+				{
+					"name": "espaciosVacios"
+				},
+				{
+					"name": "caracteresOcultos"
+				},
+				{
+					"name": "aggregate1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ID as string,",
+				"          Nombre as string,",
+				"          Edad as string,",
+				"          Email as string,",
+				"          ciudad as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 derive(Email = replace(Email, \"#\", \"@\")) ~> reemplazarValores",
+				"reemplazarValores derive(Edad = iifNull(Edad, \"0\", Edad),",
+				"          ciudad = iifNull(ciudad, \"n/a\", ciudad)) ~> datosNulos",
+				"datosNulos derive(Nombre = trim(Nombre)) ~> espaciosVacios",
+				"espaciosVacios derive(Nombre = replace(replace(replace(Nombre, \"\\\\t\", \"\"),\"\\\\r\",\"\"),\"\\\\n\",\"\")) ~> caracteresOcultos",
+				"caracteresOcultos aggregate(groupBy(ID),",
+				"     each(match(name != \"ID\"), $$ = first($$))) ~> aggregate1"
+			]
+		}
+	}
+}

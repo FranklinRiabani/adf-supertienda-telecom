@@ -12,7 +12,11 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "reemplazarValores"
@@ -28,6 +32,9 @@
 				},
 				{
 					"name": "aggregate1"
+				},
+				{
+					"name": "cast1"
 				}
 			],
 			"scriptLines": [
@@ -47,7 +54,16 @@
 				"datosNulos derive(Nombre = trim(Nombre)) ~> espaciosVacios",
 				"espaciosVacios derive(Nombre = replace(replace(replace(Nombre, \"\\\\t\", \"\"),\"\\\\r\",\"\"),\"\\\\n\",\"\")) ~> caracteresOcultos",
 				"caracteresOcultos aggregate(groupBy(ID),",
-				"     each(match(name != \"ID\"), $$ = first($$))) ~> aggregate1"
+				"     each(match(name!=\"ID\"), $$ = first($$))) ~> aggregate1",
+				"aggregate1 cast(output(",
+				"          ID as integer,",
+				"          Edad as integer",
+				"     ),",
+				"     errors: true) ~> cast1",
+				"cast1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}

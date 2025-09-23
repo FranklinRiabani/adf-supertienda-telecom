@@ -14,6 +14,10 @@
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "ds_datos_sucios_tb",
+						"type": "DatasetReference"
+					},
 					"name": "sink1"
 				}
 			],
@@ -62,8 +66,28 @@
 				"     errors: true) ~> cast1",
 				"cast1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          ID as integer,",
+				"          Nombre as string,",
+				"          Email as string,",
+				"          Edad as integer,",
+				"          Ciudad as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ID,",
+				"          Nombre,",
+				"          Email,",
+				"          Edad,",
+				"          Ciudad = ciudad",
+				"     )) ~> sink1"
 			]
 		}
 	}
